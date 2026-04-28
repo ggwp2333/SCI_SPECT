@@ -1,4 +1,8 @@
-// nvcc -O3 -use_fast_math -arch=sm_90 -o system_matrix_cuda_simple system_matrix_cuda_simple.cu -lcurand
+// nvcc -O3 -use_fast_math -arch=sm_75 -std=c++17 --extended-lambda \
+  -o system_matrix_cuda_simple \
+  fim_profile_fwhm_Tc99m_2D_batch.cu \
+  -lcurand -lcublas
+
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
@@ -10,6 +14,7 @@
 #include <thread>
 #include <mutex>
 #include <numeric>
+#include <algorithm>
 #include <filesystem>
 #include <cuda_runtime.h>
 #include <curand_kernel.h>
@@ -36,9 +41,10 @@ static constexpr double ZTOP    = 7.5;   // mm (top plane)
 static constexpr int    NSAMPLES = 100;  // random samples per cube
 
 // FOV (same as your CPU)
-static constexpr double VX0=-74.0, VXSTEP=2.0, VX1=74.0;
+static constexpr double VX0=-60.0, VXSTEP=2.0, VX1=60.0;
 static constexpr double VY0=0.0, VYSTEP=2.0, VY1=0.0;
-static constexpr double VZ0=-74.0, VZSTEP=2.0, VZ1=74.0, VZOFF=150.0;
+static constexpr double VZ0=-60.0, VZSTEP=2.0, VZ1=60.0, VZOFF=150.0;
+static constexpr double R = 50.0;
 static constexpr int NX=int((VX1-VX0)/VXSTEP+1); // 75
 static constexpr int NY=int((VY1-VY0)/VYSTEP+1); // 75
 static constexpr int NZ=int((VZ1-VZ0)/VZSTEP+1); // 75
@@ -572,7 +578,7 @@ double compute_avg_fim_fwhm(const std::vector<double>& F)
     std::vector<int> sup_iy;
     sup_lin.reserve(Nxy * Nxy);
 
-    const double R2_max = 60.0 * 60.0;
+    const double R2_max = R * R;
     for (int iy = 0; iy < Nxy; ++iy) {
         for (int ix = 0; ix < Nxy; ++ix) {
             double X = xy[ix]; 
