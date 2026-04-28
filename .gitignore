@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+env/
+new_env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# C/C++/CUDA build files
+build/
+*.o
+*.so
+*.a
+*.out
+*.exe
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Profiling outputs
+*.qdrep
+*.nsys-rep
+*.ncu-rep
+
+# Logs
+*.log
+slurm-*.out
+
+# Large data/output folders
+data/
+output/
+outputs/
+cuda_output/
+results/
+checkpoints/
+*.bin
+*.dat
+*.npy
+*.pt
+*.pth
+*.mat
+
+# OS/editor files
+.DS_Store
+.vscode/
